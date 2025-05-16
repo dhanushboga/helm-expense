@@ -45,6 +45,6 @@ spec:
     project: expense
   ports:
   - protocol: TCP
-    port: {{ Values.service.port }} # service port
+    port: {{ .Values.service.port }} # service port
     targetPort: 3306
     
