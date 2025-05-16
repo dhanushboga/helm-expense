@@ -2,3 +2,5 @@ hpa:
   cpuUtilization: 15
 deployment:
   imageVersion: 1.0.0
+  memory : 128Mi
+  cpu: 100m

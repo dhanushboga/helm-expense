@@ -35,8 +35,8 @@ spec:
 
       # hard limit
           limits:
-            memory: 128Mi
-            cpu: 100m
+            memory: {{ .Values.deployment.memory }} 
+            cpu: {{ .Values.deployment.cpu }} 
         ports:
         - containerPort: 80
 
