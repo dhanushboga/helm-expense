@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: expense
+
+  # deployment resources label
+  labels:
+    app: frontend
+    tier: frontend
+    project: expense
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      tier: frontend
+      project: expense
+
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: frontend
+        project: expense
+    spec:
+      containers:
+      - name: nginx
+        image: dhanushboga/frontend:{{ .Values.deployment.imageVersion }}
+        resources:
+     # soft limit
+          requests:
+            memory: 128Mi
+            cpu: 100m
+      # hard limit
+          limits:
+            memory: 128Mi
+            cpu: 100m
+        ports:
+        - containerPort: 8080
+
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend
+  namespace: expense
+spec:
+  type: LoadBalancer
+  selector:  #labels are used as selectors
+    app: frontend
+    tier: frontend
+    project: expense
+  ports:
+  - protocol: TCP
+    port: 80 # service port
+    targetPort: 8080
+    nodePort: 30005
+    
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend
+  namespace: expense
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: {{ .Values.hpa.cpuUtilization }}
