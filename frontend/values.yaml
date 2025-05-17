@@ -4,3 +4,5 @@ deployment:
 
 hpa:
  cpuUtilization: 15
+ minreplicas: 1
+ maxreplicas: 10
